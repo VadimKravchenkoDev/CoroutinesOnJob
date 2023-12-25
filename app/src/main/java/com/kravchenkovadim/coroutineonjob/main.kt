@@ -6,13 +6,12 @@ import java.util.Random
 import kotlinx.coroutines.*
 
 fun main():Unit = runBlocking {
-    repeat(100 ) {
-        launch {
-            val result = doWork(it.toString())
-            System.out.println(result)
+    val coroutines: List<Deferred<String>> = List(100 ) {
+        async(start = CoroutineStart.LAZY) {
+            doWork(it.toString())
         }
-
     }
+    coroutines.forEach{System.out.println(it.await())}
 }
 
 suspend fun doWork(name: String): String {
